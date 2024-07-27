@@ -59,3 +59,28 @@ class Texture
         int mWidth;
         int mHeight;
 };
+
+//The mouse button
+class LButton : public Texture
+{
+	public:
+		LButton();
+
+		void setPosition( int x, int y, int w, int h);
+
+		bool handleEvent( SDL_Event* e );
+
+	private:
+		SDL_Point mPosition;
+};
+
+class Text: public Texture
+{
+public:
+
+    //Creates image from font string
+    void loadFromRenderedText( std::string textureText, SDL_Color textColor );
+
+    //input text and size
+    void loadText(string text, int size);
+};
