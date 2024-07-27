@@ -78,9 +78,75 @@ class Text: public Texture
 {
 public:
 
-    //Creates image from font string
     void loadFromRenderedText( std::string textureText, SDL_Color textColor );
 
-    //input text and size
     void loadText(string text, int size);
 };
+
+class Score: public Texture
+{
+public:
+
+    void loadFromRenderedText( std::string textureText, SDL_Color textColor );
+
+    void loadText(string text, int size);
+};
+
+class BlueCar: public Texture
+{
+    public:
+
+    BlueCar();
+
+    void handle_Event( SDL_Event& e );
+
+    void turnL();
+
+    void turnR();
+
+    void move();
+
+    void render();
+
+    int bVel;
+    int bdegree;
+};
+
+class RedCar: public Texture
+{
+    public:
+
+    RedCar();
+
+    void handle_Event( SDL_Event& e );
+
+    void turnL();
+
+    void turnR();
+
+    void move();
+
+    void render();
+
+    int rVel;
+    int rdegree;
+};
+
+class Obstacle : public Texture
+{
+    public:
+    Obstacle();
+
+    void create(int line);
+
+    void update_Pos();
+
+    void show();
+
+    int obVel, obLine, obType;
+};
+
+
+int main (){
+    return 0;
+}
