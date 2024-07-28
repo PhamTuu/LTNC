@@ -146,6 +146,84 @@ class Obstacle : public Texture
     int obVel, obLine, obType;
 };
 
+bool init();
+
+bool loadDot();
+
+bool loadBackground();
+
+bool loadBlueCar();
+
+void close();
+
+SDL_Window* gWindow = NULL;
+
+SDL_Renderer* gRenderer = NULL;
+
+TTF_Font *gFont = NULL;
+
+Mix_Music *mOpen = NULL;
+
+Mix_Chunk *mPause = NULL;
+Mix_Chunk *mGameOver1 = NULL;
+Mix_Chunk *mGameOver2 = NULL;
+Mix_Chunk *mGameOver3 = NULL;
+Mix_Chunk *mGameOver4 = NULL;
+Mix_Chunk *mClick = NULL;
+Mix_Chunk *mHighScore = NULL;
+Mix_Chunk *mScore = NULL;
+
+Texture gBackground;
+LButton gPlay, gDarkBackground, gMusicOn, gMusicOff, gPause, gHighScore, gReplay, gHome;
+Texture gBlueCar, gRedCar;
+Texture bDot, bSquare, rDot, rSquare;
+Text gText;
+Score scoreText, highScoreText, gscoreText, ghighScoreText;
+
+Texture::Texture()
+{
+    mTexture = NULL;
+    mWidth = 0;
+    mHeight = 0;
+}
+
+Texture::~Texture()
+{
+    free();
+}
+
+bool Texture::loadFromFile( std::string path )
+{
+    free();
+
+    SDL_Texture* newTexture = NULL;
+
+    SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
+    if( loadedSurface == NULL )
+    {
+        printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
+    }
+    else
+    {
+        SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0, 0xFF, 0xFF ) );
+
+        newTexture = SDL_CreateTextureFromSurface( gRenderer, loadedSurface );
+        if( newTexture == NULL )
+        {
+            printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
+        }
+        else
+        {
+            mWidth = loadedSurface->w;
+            mHeight = loadedSurface->h;
+        }
+
+        SDL_FreeSurface( loadedSurface );
+    }
+
+    mTexture = newTexture;
+    return mTexture != NULL;
+}
 
 int main (){
     return 0;
