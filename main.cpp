@@ -307,6 +307,46 @@ void Text::loadText( string text, int size)
 	}
 }
 
+void Score::loadFromRenderedText( string textureText, SDL_Color textColor )
+{
+	free();
+
+	SDL_Surface* textSurface = TTF_RenderText_Solid( gFont, textureText.c_str(), textColor );
+	if( textSurface == NULL )
+	{
+		printf( "Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError() );
+	}
+	else
+	{
+        mTexture = SDL_CreateTextureFromSurface( gRenderer, textSurface );
+		if( mTexture == NULL )
+		{
+			printf( "Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError() );
+		}
+		else
+		{
+			mWidth = textSurface->w;
+			mHeight = textSurface->h;
+		}
+
+		SDL_FreeSurface( textSurface );
+	}
+}
+
+void Score::loadText( string text, int size)
+{
+	gFont = TTF_OpenFont( "ttf/alienleaguebold.ttf", size );
+	if( gFont == NULL )
+	{
+		printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
+	}
+	else
+	{
+		SDL_Color textColor = { 220, 220, 220 };
+		loadFromRenderedText( text, textColor );
+	}
+}
+
 int main (){
     return 0;
 }
