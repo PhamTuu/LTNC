@@ -225,6 +225,47 @@ bool Texture::loadFromFile( std::string path )
     return mTexture != NULL;
 }
 
+void Texture::free()
+{
+    if( mTexture != NULL )
+    {
+        SDL_DestroyTexture( mTexture );
+        mTexture = NULL;
+        mWidth = 0;
+        mHeight = 0;
+    }
+}
+
+void Texture::setColor( Uint8 red, Uint8 green, Uint8 blue )
+{
+    SDL_SetTextureColorMod( mTexture, red, green, blue );
+}
+
+void Texture::render( int x, int y, int w, int h, double angle, SDL_Point* center, SDL_RendererFlip flip )
+{
+    SDL_Rect renderQuad = { x, y, w, h };
+
+    SDL_RenderCopyEx( gRenderer, mTexture, NULL, &renderQuad, angle, center, flip );
+}
+
+int Texture::getWidth()
+{
+    return mWidth;
+}
+
+int Texture::getHeight()
+{
+    return mHeight;
+}
+
+void Texture::update_sprite()
+{
+    sprite.x = x;
+    sprite.y = y;
+    sprite.h = H;
+    sprite.w = W;
+}
+
 int main (){
     return 0;
 }
