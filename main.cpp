@@ -347,6 +347,124 @@ void Score::loadText( string text, int size)
 	}
 }
 
+// Class LButton
+LButton::LButton()
+{
+	mPosition.x = 0;
+	mPosition.y = 0;
+}
+
+void LButton::setPosition( int x, int y, int w, int h )
+{
+	mPosition.x = x;
+	mPosition.y = y;
+	W = w;
+    H = h;
+}
+
+bool LButton::handleEvent( SDL_Event* e )
+{
+	//If mouse event happened
+	if( e->type == SDL_MOUSEMOTION || e->type == SDL_MOUSEBUTTONDOWN || e->type == SDL_MOUSEBUTTONUP )
+	{
+		int x, y;
+		SDL_GetMouseState( &x, &y );
+
+		bool inside = true;
+
+		if( x < mPosition.x )
+		{
+			inside = false;
+		}
+		else if( x > mPosition.x + W )
+		{
+			inside = false;
+		}
+		else if( y < mPosition.y )
+		{
+			inside = false;
+		}
+		else if( y > mPosition.y + H )
+		{
+			inside = false;
+		}
+
+		if( inside && e->type == SDL_MOUSEBUTTONDOWN)
+			return true;
+	}
+	return false;
+}
+
+//class Obstacle
+Obstacle::Obstacle()
+{
+    mTexture = NULL;
+    W = OBSTACLE_WIDTH;
+    H = OBSTACLE_HEIGHT;
+}
+
+void Obstacle::create(int preLine)
+{
+    if (y <= OBJ_START || y >= SCREEN_HEIGHT + obVel)
+    {
+        y = OBJ_START;
+
+        obLine = rand() % 2;
+        if (preLine > 180 && preLine < 360) switch (obLine)
+        {
+        case 0:
+            x = line1;
+            break;
+        case 1:
+            x = line2;
+            break;
+        }
+
+        if (preLine < 180 && preLine > 0) switch (obLine)
+        {
+        case 0:
+            x = line3;
+            break;
+        case 1:
+            x = line4;
+        break;
+        }
+        obType = rand() % 2;
+    }
+}
+
+void Obstacle::update_Pos()
+{
+    obVel = OBSTACLE_VEL + lvl/2*OBSTACLE_VEL_INC;
+    y += obVel;
+    if (x == line1 || x == line2 || x == line3 || x == line4)
+        update_sprite();
+}
+
+void Obstacle::show()
+{
+    switch (x)
+        {
+        case line1:
+            if (obType == 1) bDot.render( x, y, OBSTACLE_WIDTH, OBSTACLE_HEIGHT);
+            else if (obType == 0) bSquare.render( x, y, OBSTACLE_WIDTH, OBSTACLE_HEIGHT);
+            break;
+        case line2:
+            if (obType == 1) bDot.render( x, y, OBSTACLE_WIDTH, OBSTACLE_HEIGHT);
+            else if (obType == 0) bSquare.render( x, y, OBSTACLE_WIDTH, OBSTACLE_HEIGHT);
+            break;
+        case line3:
+            if (obType == 1) rDot.render( x, y, OBSTACLE_WIDTH, OBSTACLE_HEIGHT);
+            else if (obType == 0) rSquare.render( x, y, OBSTACLE_WIDTH, OBSTACLE_HEIGHT);
+            break;
+        case line4:
+            if (obType == 1) rDot.render( x, y, OBSTACLE_WIDTH, OBSTACLE_HEIGHT);
+            else if (obType == 0) rSquare.render( x, y, OBSTACLE_WIDTH, OBSTACLE_HEIGHT);
+            break;
+        }
+}
+
+
 int main (){
     return 0;
 }
