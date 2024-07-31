@@ -519,6 +519,60 @@ void BlueCar::render()
 
 }
 
+RedCar::RedCar()
+{
+    x = line4;
+    y = START;
+
+    rVel = 0;
+    rdegree = 0;
+    W = CAR_WIDTH;
+    H = CAR_HEIGHT;
+}
+
+void RedCar::handle_Event( SDL_Event& e )
+{
+    if( e.type == SDL_KEYDOWN && e.key.repeat == 0 )
+    {
+        if ( e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_d)
+        {
+            if (x == line3) turnR();
+            else if (x == line4) turnL();
+        }
+    }
+}
+
+void RedCar::turnL()
+{
+    rVel = CARS_VEL;
+}
+
+void RedCar::turnR()
+{
+    rVel = - CARS_VEL;
+}
+
+void RedCar::move()
+{
+    if( ( x >= line3 ) && ( x <= line4 ) )
+    {
+        x -= rVel;
+    }
+
+    if( ( x > line3 ) && ( x < line4 ) )
+        if (x > 252) rdegree -= degreeVel;
+        else if (x <= 252) rdegree += degreeVel;
+
+    if (x > line4) x = line4;
+    else if (x < line3) x = line3;
+    update_sprite();
+}
+
+void RedCar::render()
+{
+    gRedCar.render( x, y, CAR_WIDTH, CAR_HEIGHT, rdegree);
+}
+
 int main (){
     return 0;
 }
