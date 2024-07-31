@@ -464,6 +464,60 @@ void Obstacle::show()
         }
 }
 
+BlueCar::BlueCar()
+{
+    x = line1;
+    y = START;
+
+    bVel = 0;
+    bdegree = 0;
+    W = CAR_WIDTH;
+    H = CAR_HEIGHT;
+}
+
+void BlueCar::handle_Event( SDL_Event& e )
+{
+    if( e.type == SDL_KEYDOWN && e.key.repeat == 0 )
+    {
+        if ( e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_a)
+        {
+            if (x == line1) turnL();
+            else if (x == line2) turnR();
+        }
+    }
+}
+
+void BlueCar::turnL()
+{
+    bVel = - CARS_VEL;
+}
+
+void BlueCar::turnR()
+{
+    bVel = CARS_VEL;
+}
+
+void BlueCar::move()
+{
+    if( ( x >= line1 ) && ( x <= line2 ) )
+    {
+        x -= bVel;
+    }
+
+    if( ( x > line1 ) && ( x < line2 ) )
+        if (x > 68) bdegree -= degreeVel;
+        else if (x <= 68) bdegree += degreeVel;
+
+    if (x > line2) x = line2;
+    else if (x < line1) x = line1;
+    update_sprite();
+}
+
+void BlueCar::render()
+{
+    gBlueCar.render( x, y, CAR_WIDTH, CAR_HEIGHT, bdegree);
+
+}
 
 int main (){
     return 0;
