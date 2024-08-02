@@ -573,6 +573,152 @@ void RedCar::render()
     gRedCar.render( x, y, CAR_WIDTH, CAR_HEIGHT, rdegree);
 }
 
+bool init()
+{
+	bool success = true;
+
+	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
+	{
+		printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
+		success = false;
+	}
+	else
+	{
+		if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ) )
+		{
+			printf( "Warning: Linear texture filtering not enabled!" );
+		}
+
+		gWindow = SDL_CreateWindow( "2CARS", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+		if( gWindow == NULL )
+		{
+			printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
+			success = false;
+		}
+		else
+		{
+			gRenderer = SDL_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
+			if( gRenderer == NULL )
+			{
+				printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
+				success = false;
+			}
+			else
+			{
+				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+
+				int imgFlags = IMG_INIT_PNG;
+				if( !( IMG_Init( imgFlags ) & imgFlags ) )
+				{
+					printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
+					success = false;
+				}
+
+				if( TTF_Init() == -1 )
+				{
+					printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
+					success = false;
+				}
+
+				if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+				{
+					printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+					success = false;
+				}
+			}
+		}
+	}
+
+	return success;
+}
+
+bool loadAudio()
+{
+    bool success = true;
+
+    mScore = Mix_LoadWAV( "sound/Score.wav" );
+    if( mScore == NULL )
+	{
+		printf( "Failed to load score sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+	mHighScore = Mix_LoadWAV( "sound/HighScore.mp3" );
+    if( mHighScore == NULL )
+	{
+		printf( "Failed to load high score sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+    mGameOver1 = Mix_LoadWAV( "sound/GameOver_Punch.mp3" );
+    if( mGameOver1 == NULL )
+	{
+		printf( "Failed to load game over 1 sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+    mGameOver2 = Mix_LoadWAV( "sound/GameOver_Nope.mp3" );
+    if( mGameOver2 == NULL )
+	{
+		printf( "Failed to load GameOver2  sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+    mGameOver3 = Mix_LoadWAV( "sound/GameOver_Wasted.mp3" );
+    if( mGameOver3 == NULL )
+	{
+		printf( "Failed to load game over 3 sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+	mGameOver4 = Mix_LoadWAV( "sound/GameOver_OOF.mp3" );
+    if( mGameOver4 == NULL )
+	{
+		printf( "Failed to load game over 4 sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+    mClick = Mix_LoadWAV("sound/Click.wav");
+    if( mClick == NULL )
+	{
+		printf( "Failed to load click sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+	mPause = Mix_LoadWAV("sound/Pause.mp3");
+    return success;
+}
+bool loadText()
+{
+
+}
+
+bool loadMedia()
+{
+    bool success = true;
+
+    if( !gPlay.loadFromFile( "graphic/play.png" )
+       || ( !gHome.loadFromFile( "graphic/home.png" ))
+       || !gPause.loadFromFile( "graphic/Pause_button.png" )
+       || !gMusicOn.loadFromFile( "graphic/music.png" )
+       || !gMusicOff.loadFromFile( "graphic/music_off.png" )
+       || !gDarkBackground.loadFromFile( "graphic/black_background.png")
+       || !gReplay.loadFromFile( "graphic/replaybutton.png" )
+       || !gHighScore.loadFromFile( "graphic/trophy.png" ))
+    {
+        printf( "Failed to load Media!\n" );
+        success = false;
+    }
+
+    return success;
+}
+
+bool loadBackground()
+{
+    bool success = true;
+
+    if( !gBackground.loadFromFile( "graphic/map.png" ))
+    {
+        printf( "Failed to load background texture!\n" );
+        success = false;
+    }
+
+    return success;
+}
+
 int main (){
     return 0;
 }
