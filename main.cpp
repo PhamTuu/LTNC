@@ -719,6 +719,86 @@ bool loadBackground()
     return success;
 }
 
+bool loadBlueCar()
+{
+    bool success = true;
+
+    if( !gBlueCar.loadFromFile( "graphic/Car_blue.png" ))
+    {
+        printf( "Failed to load car texture!\n" );
+        success = false;
+    }
+
+    return success;
+}
+
+bool loadRedCar()
+{
+    bool success = true;
+
+    if( !gRedCar.loadFromFile( "graphic/Car_red.png" ))
+    {
+        printf( "Failed to load car texture!\n" );
+        success = false;
+    }
+
+    return success;
+}
+
+bool loadDot()
+{
+    bool success = true;
+
+    if( !bDot.loadFromFile( "graphic/dot_blue.png" )
+       || !rDot.loadFromFile( "graphic/dot_red.png" )
+       || !bSquare.loadFromFile( "graphic/square_blue.png" )
+       || !rSquare.loadFromFile( "graphic/square_red.png" ))
+    {
+        printf( "Failed to load car texture!\n" );
+        success = false;
+    }
+
+    return success;
+}
+
+bool hitASquare(BlueCar& blue, RedCar& red, Obstacle& obstacle)
+{
+    if (SDL_HasIntersection( &blue.sprite, &obstacle.sprite )
+        || SDL_HasIntersection( &red.sprite, &obstacle.sprite ))
+        if (obstacle.obType == 1)
+        {
+            score++;
+            if (music == true) Mix_PlayChannel( -1, mScore, 0 );
+            obstacle.obType = 2;
+            return false;
+        }
+        else if (obstacle.obType == 0)
+        {
+            //cout << "SCORE: " << score << endl << "HIT A SQUARE" << endl <<"GAME OVER" << endl << obstacle.y << " " << obstacle.x;
+            //close();
+            return true;
+        }
+        return false;
+}
+
+bool missAPoint(Obstacle& obstacle)
+{
+    if ((obstacle.y + OBSTACLE_HEIGHT >= SCREEN_HEIGHT)
+        && (obstacle.obType == 1)
+        && (obstacle.y <= SCREEN_HEIGHT + obstacle.obVel))
+    {
+        //cout << "SCORE: " << score << endl << "MISS A POINT" << endl << "GAME OVER";
+        return true;
+    }
+    else if ((obstacle.y >= SCREEN_HEIGHT)
+             && (obstacle.obType == 0 || obstacle.obType == 2)
+             && (obstacle.y < 1004))
+    {
+        return false;
+    }
+    return false;
+}
+
 int main (){
     return 0;
 }
