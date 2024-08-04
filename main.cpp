@@ -799,6 +799,32 @@ bool missAPoint(Obstacle& obstacle)
     return false;
 }
 
+void close()
+{
+    rDot.free();
+    bDot.free();
+    rSquare.free();
+    bSquare.free();
+    gBackground.free();
+    gBlueCar.free();
+    gDarkBackground.free();
+    gPlay.free();
+    gReplay.free();
+    gHighScore.free();
+    gMusicOff.free();
+    gMusicOn.free();
+    gHome.free();
+    gPause.free();
+
+    SDL_DestroyRenderer( gRenderer );
+    SDL_DestroyWindow( gWindow );
+    gWindow = NULL;
+    gRenderer = NULL;
+
+    IMG_Quit();
+    SDL_Quit();
+}
+
 int main (){
     return 0;
 }
