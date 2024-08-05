@@ -828,12 +828,14 @@ void close()
 int main( int argc, char* args[] )
 {
     srand(time(NULL));
+    //Start up SDL and create window
     if( !init() )
     {
         printf( "Failed to initialize!\n" );
     }
     else
     {
+        //Load media
         if( !loadAudio()
            ||  !loadBackground()
            || (!loadDot())
@@ -845,14 +847,17 @@ int main( int argc, char* args[] )
         }
         else
         {
+            //Main loop flag
             bool play = false;
             bool pause = false;
             bool quit = false;
             bool home = true;
             bool replay = false;
 
+            //Event handler
             SDL_Event e;
 
+            //The objects that will be moving around on the screen
             Obstacle O1, O2, O3, O4, O5, O6;
 
             BlueCar blueCar;
@@ -861,17 +866,22 @@ int main( int argc, char* args[] )
 
             Text message, textScore, textHighScore;
 
+            //While application is running
             while ( !quit )
             {
                 if ( home )
                 {
+                    //input text
                     gText.loadText("2CARS", 150);
+                    //Opening music
                     Mix_PlayMusic( mOpen, -1 );
                 }
+                //while in menu
                 while ( home )
                 {
                     while( SDL_PollEvent( &e ) != 0 )
                     {
+                        //User requests quit
                         if( e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_ESCAPE))
                         {
                             if (music == true) Mix_PlayChannel( -1, mClick, 0 );
@@ -912,6 +922,7 @@ int main( int argc, char* args[] )
                             home = false;
                             play = true;
 
+                            //Initialize variables
                             O1.y = -1004;
                             if (rand() % 2 == 1) O1.x = line4;
                             else O1.x = line1;
@@ -930,6 +941,7 @@ int main( int argc, char* args[] )
                             lvl = 1;
                         }
                     }
+                    //Clear screen
                     SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
                     SDL_RenderClear( gRenderer );
 
@@ -938,6 +950,7 @@ int main( int argc, char* args[] )
                     gHighScore.setPosition( 80, 460, 80, 80);
                     gMusicOn.setPosition( 200, 460, 80, 80);
 
+                    //Render objects
                     gBackground.render( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
                     gDarkBackground.render( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
                     gPlay.render( 82, 220, 210, 210);
@@ -948,13 +961,16 @@ int main( int argc, char* args[] )
 
                     //cout << music;
 
+                    //Update screen
                     SDL_RenderPresent( gRenderer );
                 }
 
+                //Pause screen
                 while ( pause )
                 {
                     while( SDL_PollEvent( &e ) != 0 )
                     {
+                        //User requests quit
                         if( e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_ESCAPE))
                         {
                             quit = true;
@@ -979,9 +995,11 @@ int main( int argc, char* args[] )
                             else if (music == false) music = true;
                         }
                     }
+                    //Clear screen
                     SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
                     SDL_RenderClear( gRenderer );
 
+                    //Freeze screen
                     gBackground.render( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
                     blueCar.render();
                     redCar.render();
@@ -1005,11 +1023,14 @@ int main( int argc, char* args[] )
                     else if (music == false) gMusicOff.render( 300, 15, 50, 50);
                     gText.render(50, 180, gText.mWidth, gText.mHeight);
 
+                    //Update screen
                     SDL_RenderPresent( gRenderer );
 
+                    //Delay 3 sec before start
                     if (play == true)
                     {
                         if (music == true) Mix_PlayChannel( -1, mPause, 0 );
+                        //Clear screen
                         SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
                         SDL_RenderClear( gRenderer );
                         gBackground.render( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -1023,10 +1044,12 @@ int main( int argc, char* args[] )
                         O6.show();
                         scoreText.loadText("3", 150);
                         scoreText.render((SCREEN_WIDTH - scoreText.mWidth) / 2, (SCREEN_HEIGHT - scoreText.mHeight) / 2 - 100, scoreText.mWidth, scoreText.mHeight - 30);
+                        //Update screen
                         SDL_RenderPresent( gRenderer );
 
                         SDL_Delay(1000);
 
+                        //Clear screen
                         SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
                         SDL_RenderClear( gRenderer );
                         gBackground.render( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -1040,10 +1063,12 @@ int main( int argc, char* args[] )
                         O6.show();
                         scoreText.loadText("2", 150);
                         scoreText.render((SCREEN_WIDTH - scoreText.mWidth) / 2, (SCREEN_HEIGHT - scoreText.mHeight) / 2 - 100, scoreText.mWidth, scoreText.mHeight - 30);
+                        //Update screen
                         SDL_RenderPresent( gRenderer );
 
                         SDL_Delay(1000);
 
+                        //Clear screen
                         SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
                         SDL_RenderClear( gRenderer );
                         gBackground.render( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -1057,10 +1082,12 @@ int main( int argc, char* args[] )
                         O6.show();
                         scoreText.loadText("1", 150);
                         scoreText.render((SCREEN_WIDTH - scoreText.mWidth) / 2, (SCREEN_HEIGHT - scoreText.mHeight) / 2 - 100, scoreText.mWidth, scoreText.mHeight - 30);
+                        //Update screen
                         SDL_RenderPresent( gRenderer );
 
                         SDL_Delay(1000);
 
+                        //Clear screen
                         SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
                         SDL_RenderClear( gRenderer );
                         gBackground.render( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -1074,12 +1101,131 @@ int main( int argc, char* args[] )
                         O6.show();
                         scoreText.loadText("GO", 150);
                         scoreText.render((SCREEN_WIDTH - scoreText.mWidth) / 2, (SCREEN_HEIGHT - scoreText.mHeight) / 2 - 100, scoreText.mWidth, scoreText.mHeight - 30);
+                        //Update screen
                         SDL_RenderPresent( gRenderer );
                         SDL_Delay(1000);
                     }
                 }
-            }
-        }
-    }
-    return 0;
-}
+
+                //while playing game
+                while( play )
+                {
+                    //Handle events on queue
+                    while( SDL_PollEvent( &e ) != 0 )
+                    {
+                        //User requests quit
+                        if( e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_ESCAPE))
+                        {
+                            quit = true;
+                            play = false;
+                        }
+                        blueCar.handle_Event( e );
+                        redCar.handle_Event( e );
+                        if ( gPause.handleEvent( &e ) || (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_SPACE))
+                        {
+                            if (music == true) Mix_PlayChannel( -1, mClick, 0 );
+                            play = false;
+                            pause = true;
+                        }
+                    }
+
+                    //Creat Obstacle
+                    if ((O6.y >= OBJ_DISTANCE - reduceObjDistance * lvl && O6.y < OBJ_DISTANCE + O6.obVel - reduceObjDistance * lvl) || O6.y == 1004) O1.create(O6.x);
+                    if (O1.y >= OBJ_DISTANCE - reduceObjDistance * lvl && O1.y < OBJ_DISTANCE + O1.obVel - reduceObjDistance * lvl) O2.create(O1.x);
+                    if (O2.y >= OBJ_DISTANCE - reduceObjDistance * lvl && O2.y < OBJ_DISTANCE + O2.obVel - reduceObjDistance * lvl) O3.create(O2.x);
+                    if (O3.y >= OBJ_DISTANCE - reduceObjDistance * lvl && O3.y < OBJ_DISTANCE + O3.obVel - reduceObjDistance * lvl) O4.create(O3.x);
+                    if (O4.y >= OBJ_DISTANCE - reduceObjDistance * lvl && O4.y < OBJ_DISTANCE + O4.obVel - reduceObjDistance * lvl) O5.create(O4.x);
+                    if (O5.y >= OBJ_DISTANCE - reduceObjDistance * lvl && O5.y < OBJ_DISTANCE + O5.obVel - reduceObjDistance * lvl) O6.create(O5.x);
+                    //cout << O1.y << " " << O2.y << " " << O3.y << " " << O4.y << " " << O5.y << " " << O6.y << endl;
+                    //cout << O1.y << " " << OBJ_START - (SCREEN_HEIGHT - START) << endl;
+
+                    //Move
+                    blueCar.move();
+                    redCar.move();
+                    O1.update_Pos();
+                    O2.update_Pos();
+                    O3.update_Pos();
+                    O4.update_Pos();
+                    O5.update_Pos();
+                    O6.update_Pos();
+
+                    //Survive Condition
+                    //HIT A SQUARE
+                    if ( hitASquare(blueCar, redCar, O1)
+                        || hitASquare(blueCar, redCar, O2)
+                        || hitASquare(blueCar, redCar, O3)
+                        || hitASquare(blueCar, redCar, O4)
+                        || hitASquare(blueCar, redCar, O5)
+                        || hitASquare(blueCar, redCar, O6))
+                    {
+                        play = false;
+                        replay = true;
+                    }
+                    //MISS A POINT
+                    if ( missAPoint(O1)
+                        || missAPoint(O2)
+                        || missAPoint(O3)
+                        || missAPoint(O4)
+                        || missAPoint(O5)
+                        || missAPoint(O6))
+                    {
+                        play = false;
+                        replay = true;
+                    }
+
+                    //Set up media
+                    gPause.setPosition(10, 5, 40, 53);
+                    scoreText.loadText(to_string(score), 60);
+
+
+                    //Clear screen
+                    SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+                    SDL_RenderClear( gRenderer );
+
+                    //Render objects
+                    gBackground.render( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+                    blueCar.render();
+                    redCar.render();
+                    O1.show();
+                    O2.show();
+                    O3.show();
+                    O4.show();
+                    O5.show();
+                    O6.show();
+                    gPause.render(10, 5, 40, 53);
+                    if (score >= 10) scoreText.render( 305, 8, scoreText.mWidth , scoreText.mHeight - 10);
+                    else if (score < 10) scoreText.render( 320, 8, scoreText.mWidth , scoreText.mHeight - 10);
+
+                    //Update screen
+                    SDL_RenderPresent( gRenderer );
+
+                    if ((score % 5 == 0) && (score > prevScore) && (lvl <= maxLvl)) lvl++;
+                    prevScore = score;
+                    //cout << lvl << " " << O1.obVel << " " << OBJ_DISTANCE - reduceObjDistance * lvl << endl;
+
+                    if(replay == true && play == false)
+                    {
+                        switch (rand() % 4)
+                        {
+                            case 0:
+                                if (music == true) Mix_PlayChannel( -1, mGameOver1, 0 );
+                                SDL_Delay(500);
+                                break;
+                            case 1:
+                                if (music == true) Mix_PlayChannel( -1, mGameOver2, 0);
+                                SDL_Delay(150);
+                                break;
+                            case 2:
+                                if (music == true) Mix_PlayChannel( -1, mGameOver3, 0 );
+                                SDL_Delay(2400);
+                                break;
+                            case 3:
+                                if (music == true) Mix_PlayChannel( -1, mGameOver4, 0 );
+                                SDL_Delay(360);
+                                break;
+                        }
+
+                        if (score >= highscore) highscore = score;
+
+                    }
+                }
