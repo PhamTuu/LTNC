@@ -10,6 +10,7 @@ int score = 0, lvl = 1, prevScore;
 int highscore = 0;
 bool music = true;
 
+//Screen dimension constants
 const int SCREEN_WIDTH = 360;
 const int SCREEN_HEIGHT = 640;
 const int START = 520;
