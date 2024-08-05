@@ -825,6 +825,124 @@ void close()
     SDL_Quit();
 }
 
-int main (){
+int main(int argc, char* args[]){
+    srand(time(NULL));
+    //Start up SDL and create window
+    if( !init() )
+    {
+        printf( "Failed to initialize!\n" );
+    }
+    else
+    {
+        //Load media
+        if( !loadAudio()
+           ||  !loadBackground()
+           || (!loadDot())
+           || (!loadBlueCar())
+           || (!loadRedCar())
+           || !loadMedia())
+        {
+            printf( "Failed to load media!\n" );
+        }
+        else
+        {
+            //Main loop flag
+            bool play = false;
+            bool pause = false;
+            bool quit = false;
+            bool home = true;
+            bool replay = false;
+
+            //Event handler
+            SDL_Event e;
+
+            //The objects that will be moving around on the screen
+            Obstacle O1, O2, O3, O4, O5, O6;
+
+            BlueCar blueCar;
+
+            RedCar redCar;
+
+            Text message, textScore, textHighScore;
+
+            //While application is running
+            while ( !quit )
+            {
+                if ( home )
+                {
+                    //input text
+                    gText.loadText("2CARS", 150);
+                    //Opening music
+                    Mix_PlayMusic( mOpen, -1 );
+                }
+                //while in menu
+                while ( home )
+                {
+                    while( SDL_PollEvent( &e ) != 0 )
+                    {
+                        //User requests quit
+                        if( e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_ESCAPE))
+                        {
+                            if (music == true) Mix_PlayChannel( -1, mClick, 0 );
+                            quit = true;
+                            home = false;
+                        }
+                        if (gMusicOn.handleEvent( &e ))
+                        {
+                            if (music == true) Mix_PlayChannel( -1, mClick, 0 );
+                            if (music == true) music = false;
+                            else if (music == false) music = true;
+                        }
+                        if (gHighScore.handleEvent( &e ))
+                        {
+                            if (music == true) Mix_PlayChannel( -1, mClick, 0 );
+                            if (music == true) Mix_PlayChannel( -1, mHighScore, 0 );
+                            //Clear screen
+                            SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+                            SDL_RenderClear( gRenderer );
+
+                            gBackground.render( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+                            gDarkBackground.render( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+                            ghighScoreText.loadText("Best  ", 100);
+                            highScoreText.loadText(to_string(highscore), 150);
+                            ghighScoreText.render(100, 100, ghighScoreText.mWidth, ghighScoreText.mHeight - 10);
+                            if (highscore >= 10)
+                                highScoreText.render(133, 260, highScoreText.mWidth, highScoreText.mHeight - 30);
+                            else if (highscore < 10)
+                                highScoreText.render(150, 260, highScoreText.mWidth, highScoreText.mHeight - 30);
+                            //Update screen
+                            SDL_RenderPresent( gRenderer );
+                            SDL_Delay(2000);
+                        }
+                        if (gPlay.handleEvent( &e ) || (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_SPACE))
+                        {
+                            if (music == true) Mix_PlayChannel( -1, mClick, 0 );
+                            home = false;
+                            play = true;
+
+                            //Initialize variables
+                            O1.y = -1004;
+                            if (rand() % 2 == 1) O1.x = line4;
+                            else O1.x = line1;
+                            O2.y = -1004;
+                            O3.y = -1004;
+                            O4.y = -1004;
+                            O5.y = -1004;
+                            O6.y = 1004;
+                            blueCar.x = line1;
+                            redCar.x = line4;
+                            blueCar.bdegree = 0;
+                            redCar.rdegree = 0;
+                            score = 0;
+                            blueCar.bVel = 0;
+                            redCar.rVel = 0;
+                            lvl = 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
     return 0;
 }
