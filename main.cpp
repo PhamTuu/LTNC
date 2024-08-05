@@ -1196,7 +1196,6 @@ int main( int argc, char* args[] )
                     if (score >= 10) scoreText.render( 305, 8, scoreText.mWidth , scoreText.mHeight - 10);
                     else if (score < 10) scoreText.render( 320, 8, scoreText.mWidth , scoreText.mHeight - 10);
 
-                    //Update screen
                     SDL_RenderPresent( gRenderer );
 
                     if ((score % 5 == 0) && (score > prevScore) && (lvl <= maxLvl)) lvl++;
@@ -1229,3 +1228,58 @@ int main( int argc, char* args[] )
 
                     }
                 }
+
+                if ( replay == true )
+                {
+                    gText.loadText("GAME OVER", 80);
+                    ghighScoreText.loadText("Best  ", 50);
+                    gscoreText.loadText("Score ", 50);
+                    highScoreText.loadText(to_string(highscore), 50);
+                    scoreText.loadText(to_string(score), 50);
+                }
+                while ( replay )
+                {
+                    while( SDL_PollEvent( &e ) != 0 )
+                    {
+                        if( e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_ESCAPE))
+                        {
+                            if (music == true) Mix_PlayChannel( -1, mClick, 0 );
+                            quit = true;
+                            replay = false;
+                        }
+                        if ( gReplay.handleEvent( &e ) || (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_SPACE))
+                        {
+                            if (music == true) Mix_PlayChannel( -1, mClick, 0 );
+                            replay = false;
+                            play = true;
+
+                            O1.y = -1004;
+                            if (rand() % 2 == 1) O1.x = line4;
+                            else O1.x = line1;
+                            O2.y = -1004;
+                            O3.y = -1004;
+                            O4.y = -1004;
+                            O5.y = -1004;
+                            O6.y = 1004;
+                            blueCar.x = line1;
+                            redCar.x = line4;
+                            blueCar.bdegree = 0;
+                            redCar.rdegree = 0;
+                            blueCar.bVel = 0;
+                            redCar.rVel = 0;
+                            score = 0;
+                            lvl = 1;
+                        }
+                        if ( gHome.handleEvent( &e ))
+                        {
+                            if (music == true) Mix_PlayChannel( -1, mClick, 0 );
+                            replay = false;
+                            home = true;
+                        }
+                        if (gMusicOn.handleEvent( &e ))
+                        {
+                            if (music == true) Mix_PlayChannel( -1, mClick, 0 );
+                            if (music == true) music = false;
+                            else if (music == false) music = true;
+                        }
+                    }
