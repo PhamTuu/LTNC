@@ -15,7 +15,7 @@ Function
 - Music On/Off
 - Velocity and Number of Obstacle increase through time
 
-MENU 
+MENU                                                                                                        
 ![alt text](image.png)
 
 GAME 
