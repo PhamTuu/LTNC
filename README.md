@@ -18,8 +18,9 @@ Function
 MENU                                                                                                        
 ![alt text](image.png)
 
-GAME 
+GAME                                                                                               
 ![alt text](image-1.png)
 
-BEST SCORE 
+BEST SCORE                                                                                 
+
 ![alt text](image-2.png)
