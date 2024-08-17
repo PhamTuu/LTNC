@@ -1,4 +1,4 @@
-#include <SDL.h>
+#include<SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
@@ -30,6 +30,7 @@ static const int OBJ_DISTANCE = 75;
 static const int reduceObjDistance = 5;
 static const int OBSTACLE_VEL_INC = 1;
 
+//Texture wrapper class
 class Texture
 {
 public:
@@ -60,6 +61,7 @@ public:
     int mHeight;
 };
 
+//The mouse button
 class LButton : public Texture
 {
 public:
@@ -145,8 +147,10 @@ public:
     int obVel, obLine, obType;
 };
 
+//Starts up SDL and creates window
 bool init();
 
+//Loads media
 bool loadDot();
 
 bool loadBackground();
@@ -157,12 +161,16 @@ void close();
 
 SDL_Window* gWindow = NULL;
 
+//The window renderer
 SDL_Renderer* gRenderer = NULL;
 
+//Globally used font
 TTF_Font* gFont = NULL;
 
+//The music that will be played
 Mix_Music* mOpen = NULL;
 
+Mix_Music* mBackgroundMusic = NULL;
 Mix_Chunk* mPause = NULL;
 Mix_Chunk* mGameOver1 = NULL;
 Mix_Chunk* mGameOver2 = NULL;
@@ -173,6 +181,7 @@ Mix_Chunk* mHighScore = NULL;
 Mix_Chunk* mScore = NULL;
 
 
+//Scene textures
 Texture gBackground;
 LButton gPlay, gDarkBackground, gMusicOn, gMusicOff, gPause, gHighScore, gReplay, gHome;
 Texture gBlueCar, gRedCar;
@@ -180,6 +189,7 @@ Texture bDot, bSquare, rDot, rSquare;
 Text gText;
 Score scoreText, highScoreText, gscoreText, ghighScoreText;
 
+//class Texture
 Texture::Texture()
 {
     mTexture = NULL;
@@ -266,6 +276,7 @@ void Texture::update_sprite()
     sprite.w = W;
 }
 
+//class Text
 void Text::loadFromRenderedText(string textureText, SDL_Color textColor)
 {
     free();
@@ -306,6 +317,7 @@ void Text::loadText(string text, int size)
     }
 }
 
+//class Text
 void Score::loadFromRenderedText(string textureText, SDL_Color textColor)
 {
     free();
@@ -334,6 +346,7 @@ void Score::loadFromRenderedText(string textureText, SDL_Color textColor)
 
 void Score::loadText(string text, int size)
 {
+    //Open the font
     gFont = TTF_OpenFont("ttf/alienleaguebold.ttf", size);
     if (gFont == NULL)
     {
@@ -346,6 +359,7 @@ void Score::loadText(string text, int size)
     }
 }
 
+// Class LButton
 LButton::LButton()
 {
     mPosition.x = 0;
@@ -366,7 +380,6 @@ bool LButton::handleEvent(SDL_Event* e)
     {
         int x, y;
         SDL_GetMouseState(&x, &y);
-        //cout << x << " " << y << endl;
 
         bool inside = true;
 
@@ -393,6 +406,7 @@ bool LButton::handleEvent(SDL_Event* e)
     return false;
 }
 
+//class Obstacle
 Obstacle::Obstacle()
 {
     mTexture = NULL;
@@ -438,6 +452,7 @@ void Obstacle::update_Pos()
         update_sprite();
 }
 
+//Show the OBSTACLE
 void Obstacle::show()
 {
     switch (x)
@@ -461,6 +476,7 @@ void Obstacle::show()
     }
 }
 
+//class BlueCar
 BlueCar::BlueCar()
 {
     x = line1;
@@ -499,13 +515,11 @@ void BlueCar::move()
     if ((x >= line1) && (x <= line2))
     {
         x -= bVel;
-        //std::cout << x << std::endl;
     }
 
     if ((x > line1) && (x < line2))
         if (x > 68) bdegree -= degreeVel;
         else if (x <= 68) bdegree += degreeVel;
-    //std::cout << x << " " << bdegree << std::endl;
 
     if (x > line2) x = line2;
     else if (x < line1) x = line1;
@@ -518,6 +532,7 @@ void BlueCar::render()
 
 }
 
+//class RedCar
 RedCar::RedCar()
 {
     x = line4;
@@ -569,6 +584,7 @@ void RedCar::move()
 
 void RedCar::render()
 {
+    //Show the BlueCar
     gRedCar.render(x, y, CAR_WIDTH, CAR_HEIGHT, rdegree);
 }
 
@@ -576,6 +592,7 @@ bool init()
 {
     bool success = true;
 
+    //Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
@@ -604,8 +621,10 @@ bool init()
             }
             else
             {
+                //Initialize renderer color
                 SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
+                //Initialize PNG loading
                 int imgFlags = IMG_INIT_PNG;
                 if (!(IMG_Init(imgFlags) & imgFlags))
                 {
@@ -613,12 +632,14 @@ bool init()
                     success = false;
                 }
 
+                //Initialize SDL_ttf
                 if (TTF_Init() == -1)
                 {
                     printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
                     success = false;
                 }
 
+                //Initialize SDL_mixer
                 if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
                 {
                     printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
@@ -634,7 +655,6 @@ bool init()
 bool loadAudio()
 {
     bool success = true;
-
     mScore = Mix_LoadWAV("sound/Score.wav");
     if (mScore == NULL)
     {
@@ -678,6 +698,14 @@ bool loadAudio()
         success = false;
     }
     mPause = Mix_LoadWAV("sound/Pause.mp3");
+
+    mBackgroundMusic = Mix_LoadMUS("sound/backgroundMusic.wav");
+    if (mBackgroundMusic == NULL)
+    {
+        printf("Failed to load background music! SDL_mixer Error: %s\n", Mix_GetError());
+        success = false;
+    }
+
     return success;
 }
 
@@ -764,15 +792,11 @@ bool hitASquare(BlueCar& blue, RedCar& red, Obstacle& obstacle)
         {
             score++;
             if (music == true) Mix_PlayChannel(-1, mScore, 0);
-            //cout << score << endl;
             obstacle.obType = 2;
-            //cout << obstacle.y << endl;
             return false;
         }
         else if (obstacle.obType == 0)
         {
-            //cout << "SCORE: " << score << endl << "HIT A SQUARE" << endl <<"GAME OVER" << endl << obstacle.y << " " << obstacle.x;
-            //close();
             return true;
         }
     return false;
@@ -784,7 +808,6 @@ bool missAPoint(Obstacle& obstacle)
         && (obstacle.obType == 1)
         && (obstacle.y <= SCREEN_HEIGHT + obstacle.obVel))
     {
-        //cout << "SCORE: " << score << endl << "MISS A POINT" << endl << "GAME OVER";
         return true;
     }
     else if ((obstacle.y >= SCREEN_HEIGHT)
@@ -831,6 +854,7 @@ int main(int argc, char* args[])
     }
     else
     {
+        //Load media
         if (!loadAudio()
             || !loadBackground()
             || (!loadDot())
@@ -842,14 +866,17 @@ int main(int argc, char* args[])
         }
         else
         {
+            //Main loop flag
             bool play = false;
             bool pause = false;
             bool quit = false;
             bool home = true;
             bool replay = false;
 
+            //Event handler
             SDL_Event e;
 
+            //The objects that will be moving around on the screen
             Obstacle O1, O2, O3, O4, O5, O6;
 
             BlueCar blueCar;
@@ -858,10 +885,15 @@ int main(int argc, char* args[])
 
             Text message, textScore, textHighScore;
 
+            //While application is running
             while (!quit)
             {
                 if (home)
                 {
+                    if (music == true)
+                    {
+                        Mix_PlayMusic(mBackgroundMusic, -1);
+                    }
                     gText.loadText("2CARS", 150);
                     Mix_PlayMusic(mOpen, -1);
                 }
@@ -869,6 +901,13 @@ int main(int argc, char* args[])
                 {
                     while (SDL_PollEvent(&e) != 0)
                     {
+                        if (gPlay.handleEvent(&e) || (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_SPACE))
+                        {
+                            if (music == true) Mix_PlayChannel(-1, mClick, 0);
+                            home = false;
+                            play = true;
+                            Mix_HaltMusic();
+                        }
                         if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_ESCAPE))
                         {
                             if (music == true) Mix_PlayChannel(-1, mClick, 0);
@@ -877,9 +916,17 @@ int main(int argc, char* args[])
                         }
                         if (gMusicOn.handleEvent(&e))
                         {
-                            if (music == true) Mix_PlayChannel(-1, mClick, 0);
-                            if (music == true) music = false;
-                            else if (music == false) music = true;
+                            if (music == true) {
+                                Mix_PlayChannel(-1, mClick, 0);
+                                music = false;
+                                Mix_HaltMusic();
+                            }
+                            else if (music == false)
+                            {
+                                Mix_PlayChannel(-1, mClick, 0);
+                                music = true;
+                                Mix_PlayMusic(mBackgroundMusic, -1);
+                            }
                         }
                         if (gHighScore.handleEvent(&e))
                         {
@@ -940,7 +987,6 @@ int main(int argc, char* args[])
                     else if (music == false) gMusicOff.render(200, 460, 80, 80);
                     gText.render(25, 60, gText.mWidth, gText.mHeight);
 
-                    //cout << music;
 
                     SDL_RenderPresent(gRenderer);
                 }
@@ -1055,7 +1101,6 @@ int main(int argc, char* args[])
 
                         SDL_Delay(1000);
 
-                        //Clear screen
                         SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
                         SDL_RenderClear(gRenderer);
                         gBackground.render(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -1069,13 +1114,11 @@ int main(int argc, char* args[])
                         O6.show();
                         scoreText.loadText("GO", 150);
                         scoreText.render((SCREEN_WIDTH - scoreText.mWidth) / 2, (SCREEN_HEIGHT - scoreText.mHeight) / 2 - 100, scoreText.mWidth, scoreText.mHeight - 30);
-                        //Update screen
                         SDL_RenderPresent(gRenderer);
                         SDL_Delay(1000);
                     }
                 }
 
-                //while playing game
                 while (play)
                 {
                     while (SDL_PollEvent(&e) != 0)
@@ -1095,14 +1138,13 @@ int main(int argc, char* args[])
                         }
                     }
 
+                    //Creat Obstacle
                     if ((O6.y >= OBJ_DISTANCE - reduceObjDistance * lvl && O6.y < OBJ_DISTANCE + O6.obVel - reduceObjDistance * lvl) || O6.y == 1004) O1.create(O6.x);
                     if (O1.y >= OBJ_DISTANCE - reduceObjDistance * lvl && O1.y < OBJ_DISTANCE + O1.obVel - reduceObjDistance * lvl) O2.create(O1.x);
                     if (O2.y >= OBJ_DISTANCE - reduceObjDistance * lvl && O2.y < OBJ_DISTANCE + O2.obVel - reduceObjDistance * lvl) O3.create(O2.x);
                     if (O3.y >= OBJ_DISTANCE - reduceObjDistance * lvl && O3.y < OBJ_DISTANCE + O3.obVel - reduceObjDistance * lvl) O4.create(O3.x);
                     if (O4.y >= OBJ_DISTANCE - reduceObjDistance * lvl && O4.y < OBJ_DISTANCE + O4.obVel - reduceObjDistance * lvl) O5.create(O4.x);
                     if (O5.y >= OBJ_DISTANCE - reduceObjDistance * lvl && O5.y < OBJ_DISTANCE + O5.obVel - reduceObjDistance * lvl) O6.create(O5.x);
-                    //cout << O1.y << " " << O2.y << " " << O3.y << " " << O4.y << " " << O5.y << " " << O6.y << endl;
-                    //cout << O1.y << " " << OBJ_START - (SCREEN_HEIGHT - START) << endl;
 
                     blueCar.move();
                     redCar.move();
@@ -1113,6 +1155,8 @@ int main(int argc, char* args[])
                     O5.update_Pos();
                     O6.update_Pos();
 
+                    //Survive Condition
+                    //HIT A SQUARE
                     if (hitASquare(blueCar, redCar, O1)
                         || hitASquare(blueCar, redCar, O2)
                         || hitASquare(blueCar, redCar, O3)
@@ -1123,6 +1167,7 @@ int main(int argc, char* args[])
                         play = false;
                         replay = true;
                     }
+                    //MISS A POINT
                     if (missAPoint(O1)
                         || missAPoint(O2)
                         || missAPoint(O3)
@@ -1158,7 +1203,6 @@ int main(int argc, char* args[])
 
                     if ((score % 5 == 0) && (score > prevScore) && (lvl <= maxLvl)) lvl++;
                     prevScore = score;
-                    //cout << lvl << " " << O1.obVel << " " << OBJ_DISTANCE - reduceObjDistance * lvl << endl;
 
                     if (replay == true && play == false)
                     {
@@ -1278,6 +1322,5 @@ int main(int argc, char* args[])
     }
 
     close();
-
     return 0;
 }
