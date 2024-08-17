@@ -1,7 +1,9 @@
 # LTNC
-CarCar
+2Cars
 
 Phạm Anh Tú - 22029055
+
+Link DEMO and Run Game: https://drive.google.com/drive/folders/1lwFWrIq_ZYD77oKpMUpJ98iGPokJi-Di?usp=sharing
 
 Intruction:
 - Moving 2 cars in different line to dogde SQUARE and eat CIRCLE to earn point
