@@ -21,8 +21,8 @@ Intruction:
     - Music On/Off
     - Velocity and Number of Obstacle increase through time
 
-GAME                                                                                               
-![alt text](image-1.png)
+GAME
+![alt text](image.png)                                                                                             
 
 Source code game:
 - Core Structure:
@@ -62,8 +62,10 @@ Source code game:
             - replay: Displays the game over screen with the score, high score, and Replay and Home buttons.
 
 
-Reference:
-- Code: https://github.com/rsharifnasab/sbu_2cars
+References:
+- Code: 
+    - https://github.com/rsharifnasab/sbu_2cars
+    - https://github.com/nasourim/TwoCars-Simple-CLI
 - Graphics: Capture 2cars game on CHPlay
 - Sound: [freesound.org ](https://freesound.org/)
 - Font: 
