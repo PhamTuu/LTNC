@@ -1,5 +1,5 @@
 # LTNC
-2Cars
+# 2Cars
 
 Phạm Anh Tú - 22029055
 
@@ -23,10 +23,10 @@ Intruction:
     - Music On/Off
     - Velocity and Number of Obstacle increase through time
 
-DEMO                                                                                                                           
+# DEMO                                                                                                                       
 ![alt text](image.png)                                                                                             
 
-Source code game:
+# Source code game:
 - Core Structure:
     - Classes:
         - Texture: A base class for handling textures (images) in the game. It loads images, renders them on the screen, and manages their dimensions.
@@ -64,7 +64,7 @@ Source code game:
             - replay: Displays the game over screen with the score, high score, and Replay and Home buttons.
 
 
-References:
+# References:
 - Code: 
     - https://github.com/rsharifnasab/sbu_2cars
     - https://github.com/nasourim/TwoCars-Simple-CLI
