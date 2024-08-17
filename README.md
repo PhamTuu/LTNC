@@ -21,7 +21,7 @@ Intruction:
     - Music On/Off
     - Velocity and Number of Obstacle increase through time
 
-GAME
+DEMO                                                                                                                           
 ![alt text](image.png)                                                                                             
 
 Source code game:
